@@ -1,33 +1,29 @@
-
-document.getElementById('nameInput').addEventListener('input', function(event) {
-    const input = event.target;
-    const value = input.value;
-    input.value = value.replace(/[^a-zA-Z\s]/g, '');
-});
-
 document.getElementById('greetButton').addEventListener('click', function() {
-    const name = document.getElementById('nameInput').value.trim(); 
-    const responseMessage = document.getElementById('responseMessage');
+    const name = document.getElementById('nameInput').value;
+    console.log('Name entered:', name); // Debugging log
 
     if (!name) {
-        responseMessage.textContent = 'Name is required.';
-        responseMessage.style.opacity = 1;
+        alert('Name is required.');
         return;
     }
 
     fetch(`http://localhost:3000/api/greet?name=${encodeURIComponent(name)}`)
-        .then(response => response.json())
+        .then(response => {
+            console.log('Response:', response); // Debugging log
+            return response.json();
+        })
         .then(data => {
+            console.log('Data:', data); // Debugging log
             if (data.error) {
-                responseMessage.textContent = data.error;
+                document.getElementById('responseMessage').textContent = data.error;
             } else {
-                responseMessage.textContent = data.message;
+                document.getElementById('responseMessage').textContent = data.message;
             }
-            responseMessage.style.opacity = 1;
+            document.getElementById('responseMessage').style.opacity = 1;
         })
         .catch(error => {
-            console.error('Error:', error);
-            responseMessage.textContent = 'An error occurred. Please try again.';
-            responseMessage.style.opacity = 1;
+            console.error('Error:', error); // Debugging log
+            document.getElementById('responseMessage').textContent = 'An error occurred. Please try again.';
+            document.getElementById('responseMessage').style.opacity = 1;
         });
 });
